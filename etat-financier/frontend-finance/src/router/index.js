@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HelloWorld from '../components/HelloWorld.vue';
 import FormTransaction from '../components/FormTransaction.vue';
 import Bilan from '../components/Bilan.vue';
+import Donne from '../components/Donne.vue';
 
 const routes = [
     {
@@ -20,6 +21,11 @@ const routes = [
         path: '/bilan',
         name: 'Bilan',
         component: Bilan, // Page de bilan
+    },
+    {
+        path: '/donne',
+        name: 'Donne',
+        component: Donne,
     }
 
 ];
