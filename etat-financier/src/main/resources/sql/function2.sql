@@ -101,6 +101,23 @@ SELECT
         END AS rlg
 FROM actifCourant, passifCourant;
 
+WITH dette AS (
+    SELECT tf.montant as valeur FROM transaction_financiere tf
+    JOIN public.compte_financier cf on cf.id = tf.compte_financier_id
+    WHERE cf.type_compte = 2
+    AND tf.compte_financier_id IN (10, 11, 12, 13, 14, 30, 36)
+),
+     total_actif AS (
+         SELECT SUM(tf2.montant) AS valeur
+         FROM transaction_financiere tf2
+                  JOIN public.compte_financier cf ON cf.id = tf2.compte_financier_id
+         WHERE cf.type_compte = 1
+     )
+SELECT (dette.valeur/total_actif.valeur) * 100 as dette_global
+FROM dette,total_actif;
+
+
+
 
 
 

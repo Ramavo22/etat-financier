@@ -142,31 +142,21 @@ public class AnalyseService {
 
     public Double ratioEndettementGlobal() {
         String sql = """
-        WITH Dettes AS (
-            SELECT SUM(tf.montant) AS total_dettes
-            FROM transaction_financiere tf
-            JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-            WHERE cf.parent_id IN (
-                SELECT id FROM compte_financier WHERE nom IN ('Passif courant', 'Passif Non courant')
-            )
-        ),
-        Actifs AS (
-            SELECT SUM(tf.montant) AS total_actifs
-            FROM transaction_financiere tf
-            JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-            WHERE cf.parent_id IN (
-                SELECT id FROM compte_financier WHERE nom IN ('Actifs courants', 'Actifs Non courant')
-            )
-        )
-        SELECT 
-            (CASE 
-                WHEN Actifs.total_actifs = 0 THEN NULL
-                ELSE (Dettes.total_dettes / Actifs.total_actifs) * 100
-            END) AS ratio_endettement_global
-        FROM 
-            Dettes, Actifs
+        WITH dette AS (
+          SELECT tf.montant as valeur FROM transaction_financiere tf
+          JOIN public.compte_financier cf on cf.id = tf.compte_financier_id
+          WHERE cf.type_compte = 2
+          AND tf.compte_financier_id IN (10, 11, 12, 13, 14, 30, 36)
+      ),
+           total_actif AS (
+               SELECT SUM(tf2.montant) AS valeur
+               FROM transaction_financiere tf2
+                        JOIN public.compte_financier cf ON cf.id = tf2.compte_financier_id
+               WHERE cf.type_compte = 1
+           )
+      SELECT (dette.valeur/total_actif.valeur) * 100 as dette_global
+      FROM dette,total_actif
     """;
-
         return template.queryForObject(sql, Double.class);
     }
 
