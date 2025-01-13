@@ -8,13 +8,15 @@ INSERT INTO type_compte (nom) VALUES
 
 -- CLASSE Mère
 INSERT INTO compte_financier(nom,type_compte) VALUES 
+
 ('Actifs courants', 1), -- 1
 ('Actifs Non courant', 1), -- 2
 
 ('Passif courant', 2), -- 3
 ('Passif Non courant', 2), -- 4
 
-('Capitaux propres', 3); -- 5
+('Capitaux propres', 3), -- 5
+('Stock', 1); -- 1
 
 
 -- CLASSE 1 - COMPTES DE CAPITAUX

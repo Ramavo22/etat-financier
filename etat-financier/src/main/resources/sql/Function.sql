@@ -164,3 +164,26 @@ SELECT
     (Dettes.total_dettes / Actifs.total_actifs) * 100 AS ratio_endettement_global
 FROM 
     Dettes, Actifs;
+
+
+
+CREATE OR REPLACE FUNCTION get_enfants_recursive(nom_rubrique VARCHAR)
+RETURNS TABLE(id INT, nom VARCHAR, type_compte INT, parent_id INT) AS
+$$
+BEGIN
+    RETURN QUERY
+    WITH RECURSIVE enfants AS (
+        SELECT c.id, c.nom, c.type_compte, c.parent_id
+        FROM compte_financier c
+        WHERE c.nom = nom_rubrique
+        
+        UNION ALL
+        
+        SELECT c.id, c.nom, c.type_compte, c.parent_id
+        FROM compte_financier c
+        INNER JOIN enfants e ON c.parent_id = e.id
+    )
+    SELECT e.id, e.nom, e.type_compte, e.parent_id
+    FROM enfants e;
+END;
+$$ LANGUAGE plpgsql;

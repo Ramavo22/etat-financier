@@ -128,7 +128,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get("http://localhost:8080/menuData");
+        const response = await axios.get("http://localhost:9090/menuData");
         if (response.data.status === "success") {
           this.data.actifCourant = response.data.datas.actifCourant;
           this.data.actifNonCourant = response.data.datas.actifNonCourant;
@@ -163,7 +163,7 @@ export default {
         console.log(formData);
 
         //Effectuer une requête POST
-        const response = await axios.post("http://localhost:8080/transaction", formData);
+        const response = await axios.post("http://localhost:9090/transaction", formData);
 
         if (response.data.status === "success") {
           // Gestion de la réponse réussie

@@ -1,6 +1,6 @@
 -- Création de la base de données et connexion
-CREATE DATABASE finance_reader;
-\c finance_reader;
+CREATE DATABASE financier;
+\c financier;
 
 
 -- Table pour les types de compte
