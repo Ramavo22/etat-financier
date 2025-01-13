@@ -26,7 +26,7 @@ const routes = [
         path: '/donne',
         name: 'Donne',
         component: Donne,
-    }
+    },
 
 ];
 
