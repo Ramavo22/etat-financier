@@ -61,4 +61,15 @@ public class TransactionFinanciereService {
     public List<BilanDetails> getBilan(){
         return transactionFinanciereRepo.getBilanDetails();
     }
+    public Double getSumByCategoryAndDateRange(String category, LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Les dates de début et de fin doivent être fournies.");
+        }
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("La catégorie doit être fournie.");
+        }
+    
+        return transactionFinanciereRepo.sumByCategoryAndDateRange(category, startDate, endDate);
+    }
+    
 }
