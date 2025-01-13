@@ -359,7 +359,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Provisions et produits constatés d'avance
     public Double getProvisionsProduits() {
         String sql = """
-            SELECT SUM(t.montant) AS total_provisions_prod_concustes
+            SELECT COALESCE(SUM(t.montant), 0) AS total_provisions_prod_concustes
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Provisions et produits constatés d\'avance') e
                 ON t.compte_financier_id = e.id;
@@ -370,7 +370,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // TOTAL PASSIFS NON-COURANTS II
     public Double getTotalPassifsNonCourants() {
         String sql = """
-            SELECT SUM(t.montant) AS total_provisions_prod_concustes
+            SELECT COALESCE(SUM(t.montant), 0) AS total_provisions_prod_concustes
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Passif Non courant') e
                 ON t.compte_financier_id = e.id;
@@ -381,7 +381,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Dettes à court terme
     public Double getDettesCourtTerme() {
         String sql = """
-            SELECT SUM(t.montant) AS total_dettes_court_terme
+            SELECT COALESCE(SUM(t.montant), 0) AS total_dettes_court_terme
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Dettes à court terme') e
                 ON t.compte_financier_id = e.id;
@@ -392,7 +392,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Fournisseurs et comptes rattachés
     public Double getFournisseursEtComptes() {
         String sql = """
-            SELECT SUM(t.montant) AS total_dettes_court_terme
+            SELECT COALESCE(SUM(t.montant), 0)  AS total_dettes_court_terme
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Fournisseurs et comptes rattachés') e
                 ON t.compte_financier_id = e.id;
@@ -403,7 +403,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Provisions et produits constatés d'avance - passifs courants
     public Double getProvisionsProduitsCourants() {
         String sql = """
-            SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
+            SELECT COALESCE(SUM(t.montant), 0)  AS total_provisions_produits_constates_avance
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Provisions et produits constatés d''avance - passifs courants') e
                 ON t.compte_financier_id = e.id;
@@ -414,7 +414,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Comptes de trésorerie (découverts bancaires)
     public Double getComptesTresorerie() {
         String sql = """
-            SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
+            SELECT COALESCE(SUM(t.montant), 0)  AS total_provisions_produits_constates_avance
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Tresorerie') e
                 ON t.compte_financier_id = e.id;
@@ -425,7 +425,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // TOTAL PASSIFS COURANTS
     public Double getTotalPassifsCourants() {
         String sql = """
-            SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
+            SELECT COALESCE(SUM(t.montant), 0)  AS total_provisions_produits_constates_avance
             FROM transaction_financiere t
             JOIN get_enfants_recursive('Passif courant') e
                 ON t.compte_financier_id = e.id;
