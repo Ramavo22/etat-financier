@@ -53,7 +53,7 @@ public class TransactionFinanciereService {
             throw new ArrayLengthNotMatchingException("the arrays use in this function had not the same length");
         }
     }
-    private void save(TransactionFinanciere transactionFinanciere) {
+    public void save(TransactionFinanciere transactionFinanciere) {
         transactionFinanciereRepo.save(transactionFinanciere);
     }
 
