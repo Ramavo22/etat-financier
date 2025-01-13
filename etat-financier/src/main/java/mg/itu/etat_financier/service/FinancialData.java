@@ -176,41 +176,51 @@ public class FinancialData {
         return getResultatNetExercice(startDate, endDate) + getPartSociétésMisesEquivalence(startDate, endDate);
     }
 
-    // Fonction pour retourner tout en JSON
-    public JSONObject getFinancialDataAsJSON(LocalDate startDate, LocalDate endDate) {
-        JSONObject json = new JSONObject();
-        json.put("Chiffre_d_affaires", getChiffreAffaires(startDate, endDate));
-        json.put("Production_stockee", getProductionStockee(startDate, endDate));
-        json.put("Production_immobilisee", getProductionImmobilisee(startDate, endDate));
-        json.put("Production_de_l_exercice", getProductionExercice(startDate, endDate));
-        json.put("Achats_consommes", getAchatsConsommes(startDate, endDate));
-        json.put("Services_exterieurs", getServicesExterieurs(startDate, endDate));
-        json.put("Consommation_de_l_exercice", getConsommationExercice(startDate, endDate));
-        json.put("Valeur_ajoutee_exploitation", getValeurAjouteeExploitation(startDate, endDate));
-        json.put("Charges_de_personnel", getChargesPersonnel(startDate, endDate));
-        json.put("Impots_taxes", getImpotsTaxes(startDate, endDate));
-        json.put("Excedent_brut_exploitation", getExcedentBrutExploitation(startDate, endDate));
-        json.put("Autres_produits_operationnels", getAutresProduitsOper(startDate, endDate));
-        json.put("Autres_charges_operationnelles", getAutresChargesOper(startDate, endDate));
-        json.put("Dotations_aux_amortissements", getDotationsAmortissements(startDate, endDate));
-        json.put("Reprise_sur_provisions", getRepriseProvisions(startDate, endDate));
-        json.put("Resultat_operationnel", getResultatOperationnel(startDate, endDate));
-        json.put("Produits_financiers", getProduitsFinanciers(startDate, endDate));
-        json.put("Charges_financieres", getChargesFinancieres(startDate, endDate));
-        json.put("Resultat_financier", getResultatFinancier(startDate, endDate));
-        json.put("Resultat_avant_impots", getResultatAvantImpots(startDate, endDate));
-        json.put("Impots_exigibles", getImpotsExigibles(startDate, endDate));
-        json.put("Impots_differes", getImpotsDifferes(startDate, endDate));
-        json.put("Total_des_produits_activites_ordinaire", getTotalProduitsActivitesOrdinaires(startDate, endDate));
-        json.put("Total_des_charges_activites_ordinaire", getTotalChargesActivitesOrdinaires(startDate, endDate));
-        json.put("Resultat_net_des_activites_ordinaire", getResultatNetActivitesOrdinaires(startDate, endDate));
-        json.put("Elements_extraordinaires_produits", getElementsExtraordinairesProduits(startDate, endDate));
-        json.put("Elements_extraordinaires_charges", getElementsExtraordinairesCharges(startDate, endDate));
-        json.put("Resultat_extraordinaire", getResultatExtraordinaire(startDate, endDate));
-        json.put("Resultat_net_de_l_exercice", getResultatNetExercice(startDate, endDate));
-        json.put("Part_dans_les_resultats_nets_des_societes_mises_en_equivalence", getPartSociétésMisesEquivalence(startDate, endDate));
-        json.put("Resultat_net_de_l_ensemble_consolide", getResultatNetEnsembleConsolide(startDate, endDate));
+   // Fonction pour retourner tout en JSON
+    public JSONArray getFinancialDataAsJSON(LocalDate startDate, LocalDate endDate) {
+        JSONArray jsonArray = new JSONArray();
 
-        return json;
+        jsonArray.put(createJsonEntry("Chiffre d'affaires", getChiffreAffaires(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Production stockée", getProductionStockee(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Production immobilisée", getProductionImmobilisee(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Production de l'exercice", getProductionExercice(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Achats consommés", getAchatsConsommes(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Services extérieurs", getServicesExterieurs(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Consommation de l'exercice", getConsommationExercice(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Valeur ajoutée d'exploitation", getValeurAjouteeExploitation(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Charges de personnel", getChargesPersonnel(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Impôts et taxes", getImpotsTaxes(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Excédent brut d'exploitation", getExcedentBrutExploitation(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Autres produits opérationnels", getAutresProduitsOper(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Autres charges opérationnelles", getAutresChargesOper(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Dotations aux amortissements", getDotationsAmortissements(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Reprises sur provisions", getRepriseProvisions(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat opérationnel", getResultatOperationnel(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Produits financiers", getProduitsFinanciers(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Charges financières", getChargesFinancieres(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat financier", getResultatFinancier(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat avant impôts", getResultatAvantImpots(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Impôts exigibles", getImpotsExigibles(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Impôts différés", getImpotsDifferes(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Total des produits des activités ordinaires", getTotalProduitsActivitesOrdinaires(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Total des charges des activités ordinaires", getTotalChargesActivitesOrdinaires(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat net des activités ordinaires", getResultatNetActivitesOrdinaires(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Éléments extraordinaires - produits", getElementsExtraordinairesProduits(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Éléments extraordinaires - charges", getElementsExtraordinairesCharges(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat extraordinaire", getResultatExtraordinaire(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat net de l'exercice", getResultatNetExercice(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Part dans les résultats nets des sociétés mises en équivalence", getPartSociétésMisesEquivalence(startDate, endDate)));
+        jsonArray.put(createJsonEntry("Résultat net de l'ensemble consolidé", getResultatNetEnsembleConsolide(startDate, endDate)));
+
+        return jsonArray;
     }
+
+    // Méthode utilitaire pour créer une entrée JSON avec un nom et un montant
+    private JSONObject createJsonEntry(String nom, Object montant) {
+        JSONObject entry = new JSONObject();
+        entry.put("nom", nom);
+        entry.put("montant", montant);
+        return entry;
+    }
+
 }

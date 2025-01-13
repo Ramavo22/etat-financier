@@ -12,70 +12,70 @@ public class BilanService {
     private JdbcTemplate jdbcTemplate;
 
 
-    public JSONObject getBilanJSON() {
+   /*public JSONObject getBilanJSON() {
     JSONObject bilan = new JSONObject();
 
     // ACTIFS NON COURANTS
-    JSONObject actifsNonCourants = new JSONObject();
-    actifsNonCourants.put("Ecart d'acquisition", 0);
-    actifsNonCourants.put("Immobilisations incorporelles", safeGetValue(() -> getImmIncorporelles()));
-    actifsNonCourants.put("Immobilisations corporelles", safeGetValue(() -> getImmCorporelles()));
-    actifsNonCourants.put("Immobilisations en cours", safeGetValue(() -> getImmEnCours()));
-    actifsNonCourants.put("Immobilisations financières", safeGetValue(() -> getImmFinancieres()));
-    actifsNonCourants.put("Titres mis en équivalence", safeGetValue(() -> getTitresEquivalence()));
-    actifsNonCourants.put("Autres participations et créances rattachées", safeGetValue(() -> getAutresParticipations()));
-    actifsNonCourants.put("Autres titres immobilisés", safeGetValue(() -> getAutresTitresImmobilises()));
-    actifsNonCourants.put("Prêts et autres immobilisations financières", safeGetValue(() -> getPretsImmobilisations()));
-    actifsNonCourants.put("TOTAL ACTIFS NON COURANTS", safeGetValue(() -> getActifsNonCourants()));
+    JSONArray actifsNonCourants = new JSONArray();
+    actifsNonCourants.put(createJsonEntry("Ecart d'acquisition", 0));
+    actifsNonCourants.put(createJsonEntry("Immobilisations incorporelles", safeGetValue(() -> getImmIncorporelles())));
+    actifsNonCourants.put(createJsonEntry("Immobilisations corporelles", safeGetValue(() -> getImmCorporelles())));
+    actifsNonCourants.put(createJsonEntry("Immobilisations en cours", safeGetValue(() -> getImmEnCours())));
+    actifsNonCourants.put(createJsonEntry("Immobilisations financières", safeGetValue(() -> getImmFinancieres())));
+    actifsNonCourants.put(createJsonEntry("Titres mis en équivalence", safeGetValue(() -> getTitresEquivalence())));
+    actifsNonCourants.put(createJsonEntry("Autres participations et créances rattachées", safeGetValue(() -> getAutresParticipations())));
+    actifsNonCourants.put(createJsonEntry("Autres titres immobilisés", safeGetValue(() -> getAutresTitresImmobilises())));
+    actifsNonCourants.put(createJsonEntry("Prêts et autres immobilisations financières", safeGetValue(() -> getPretsImmobilisations())));
+    actifsNonCourants.put(createJsonEntry("TOTAL ACTIFS NON COURANTS", safeGetValue(() -> getActifsNonCourants())));
 
     // ACTIFS COURANTS
-    JSONObject actifsCourants = new JSONObject();
-    actifsCourants.put("Stocks et en cours", safeGetValue(() -> getStocksEtEnCours()));
-    actifsCourants.put("Créances et emplois assimilés", safeGetValue(() -> getCreancesEtEmplois()));
-    actifsCourants.put("Clients et autres débiteurs", safeGetValue(() -> getClientsEtAutresDebiteurs()));
-    actifsCourants.put("Impôts", safeGetValue(() -> getImpots()));
-    actifsCourants.put("Autres créances et actifs assimilés", safeGetValue(() -> getAutresCreances()));
-    actifsCourants.put("Trésorerie et équivalents de trésorerie", safeGetValue(() -> getTresorerieEtEquivalents()));
-    actifsCourants.put("Placements et autres équivalents de trésorerie", safeGetValue(() -> getPlacementsEquivalents()));
-    actifsCourants.put("Trésorerie (fonds en caisse et dépôts à vue)", safeGetValue(() -> getTresorerieCaisseDepots()));
-    actifsCourants.put("TOTAL ACTIFS COURANTS", safeGetValue(() -> getTotalActifsCourants()));
+    JSONArray actifsCourants = new JSONArray();
+    actifsCourants.put(createJsonEntry("Stocks et en cours", safeGetValue(() -> getStocksEtEnCours())));
+    actifsCourants.put(createJsonEntry("Créances et emplois assimilés", safeGetValue(() -> getCreancesEtEmplois())));
+    actifsCourants.put(createJsonEntry("Clients et autres débiteurs", safeGetValue(() -> getClientsEtAutresDebiteurs())));
+    actifsCourants.put(createJsonEntry("Impôts", safeGetValue(() -> getImpots())));
+    actifsCourants.put(createJsonEntry("Autres créances et actifs assimilés", safeGetValue(() -> getAutresCreances())));
+    actifsCourants.put(createJsonEntry("Trésorerie et équivalents de trésorerie", safeGetValue(() -> getTresorerieEtEquivalents())));
+    actifsCourants.put(createJsonEntry("Placements et autres équivalents de trésorerie", safeGetValue(() -> getPlacementsEquivalents())));
+    actifsCourants.put(createJsonEntry("Trésorerie (fonds en caisse et dépôts à vue)", safeGetValue(() -> getTresorerieCaisseDepots())));
+    actifsCourants.put(createJsonEntry("TOTAL ACTIFS COURANTS", safeGetValue(() -> getTotalActifsCourants())));
 
     // TOTAL DES ACTIFS
     bilan.put("TOTAL DES ACTIFS", safeGetValue(() -> getTotalActifs()));
 
     // CAPITAUX PROPRES
-    JSONObject capitauxPropres = new JSONObject();
-    capitauxPropres.put("Capital émis", safeGetValue(() -> getCapitalEmis()));
-    capitauxPropres.put("Primes et réserves consolidées", safeGetValue(() -> getPrimesEtReserves()));
-    capitauxPropres.put("Ecarts d'évaluation", safeGetValue(() -> getEcartsEvaluation()));
-    capitauxPropres.put("Ecart d'équivalence", safeGetValue(() -> getEcartsEquivalence()));
-    capitauxPropres.put("Résultat net - part du groupe", safeGetValue(() -> getResultatNetPartDuGroupe()));
-    capitauxPropres.put("Autres capitaux propres - report à nouveau", safeGetValue(() -> getAutresCapitauxPropres()));
-    capitauxPropres.put("Part de la société consolidante", safeGetValue(() -> getPartSocieteConsolidante()));
-    capitauxPropres.put("Part des minoritaires", safeGetValue(() -> getPartDesMinoritaires()));
-    capitauxPropres.put("TOTAL I", safeGetValue(() -> getTotalCapitauxPropres()));
+    JSONArray capitauxPropres = new JSONArray();
+    capitauxPropres.put(createJsonEntry("Capital émis", safeGetValue(() -> getCapitalEmis())));
+    capitauxPropres.put(createJsonEntry("Primes et réserves consolidées", safeGetValue(() -> getPrimesEtReserves())));
+    capitauxPropres.put(createJsonEntry("Ecarts d'évaluation", safeGetValue(() -> getEcartsEvaluation())));
+    capitauxPropres.put(createJsonEntry("Ecart d'équivalence", safeGetValue(() -> getEcartsEquivalence())));
+    capitauxPropres.put(createJsonEntry("Résultat net - part du groupe", safeGetValue(() -> getResultatNetPartDuGroupe())));
+    capitauxPropres.put(createJsonEntry("Autres capitaux propres - report à nouveau", safeGetValue(() -> getAutresCapitauxPropres())));
+    capitauxPropres.put(createJsonEntry("Part de la société consolidante", safeGetValue(() -> getPartSocieteConsolidante())));
+    capitauxPropres.put(createJsonEntry("Part des minoritaires", safeGetValue(() -> getPartDesMinoritaires())));
+    capitauxPropres.put(createJsonEntry("TOTAL I", safeGetValue(() -> getTotalCapitauxPropres())));
 
     // PASSIFS NON-COURANTS
-    JSONObject passifsNonCourants = new JSONObject();
-    passifsNonCourants.put("Produits différés : subventions d'investissement", safeGetValue(() -> getSubventionsInvestissement()));
-    passifsNonCourants.put("Impôts différés", safeGetValue(() -> getImpotsDifferes()));
-    passifsNonCourants.put("Emprunts et dettes financières", safeGetValue(() -> getEmpruntsDettesFinancieres()));
-    passifsNonCourants.put("Provisions et produits constatés d'avance", safeGetValue(() -> getProvisionsProduits()));
-    passifsNonCourants.put("TOTAL PASSIFS NON COURANTS II", safeGetValue(() -> getTotalPassifsNonCourants()));
+    JSONArray passifsNonCourants = new JSONArray();
+    passifsNonCourants.put(createJsonEntry("Produits différés : subventions d'investissement", safeGetValue(() -> getSubventionsInvestissement())));
+    passifsNonCourants.put(createJsonEntry("Impôts différés", safeGetValue(() -> getImpotsDifferes())));
+    passifsNonCourants.put(createJsonEntry("Emprunts et dettes financières", safeGetValue(() -> getEmpruntsDettesFinancieres())));
+    passifsNonCourants.put(createJsonEntry("Provisions et produits constatés d'avance", safeGetValue(() -> getProvisionsProduits())));
+    passifsNonCourants.put(createJsonEntry("TOTAL PASSIFS NON COURANTS II", safeGetValue(() -> getTotalPassifsNonCourants())));
 
     // PASSIFS COURANTS
-    JSONObject passifsCourants = new JSONObject();
-    passifsCourants.put("Dettes à court terme - partie à court terme de dettes à long terme", safeGetValue(() -> getDettesCourtTerme()));
-    passifsCourants.put("Fournisseurs et comptes rattachés", safeGetValue(() -> getFournisseursEtComptes()));
-    passifsCourants.put("Provisions et produits constatés d'avance - passifs courants", safeGetValue(() -> getProvisionsProduitsCourants()));
-    passifsCourants.put("Autres dettes", safeGetValue(() -> getAutresDettes()));
-    passifsCourants.put("Comptes de trésorerie (découverts bancaires)", safeGetValue(() -> getComptesTresorerie()));
-    passifsCourants.put("TOTAL PASSIFS COURANTS", safeGetValue(() -> getTotalPassifsCourants()));
+    JSONArray passifsCourants = new JSONArray();
+    passifsCourants.put(createJsonEntry("Dettes à court terme - partie à court terme de dettes à long terme", safeGetValue(() -> getDettesCourtTerme())));
+    passifsCourants.put(createJsonEntry("Fournisseurs et comptes rattachés", safeGetValue(() -> getFournisseursEtComptes())));
+    passifsCourants.put(createJsonEntry("Provisions et produits constatés d'avance - passifs courants", safeGetValue(() -> getProvisionsProduitsCourants())));
+    passifsCourants.put(createJsonEntry("Autres dettes", safeGetValue(() -> getAutresDettes())));
+    passifsCourants.put(createJsonEntry("Comptes de trésorerie (découverts bancaires)", safeGetValue(() -> getComptesTresorerie())));
+    passifsCourants.put(createJsonEntry("TOTAL PASSIFS COURANTS", safeGetValue(() -> getTotalPassifsCourants())));
 
     // TOTAL DES PASSIFS
     bilan.put("TOTAL DES PASSIFS", safeGetValue(() -> getTotalPassifs()));
 
-    // Ajouter les objets JSON dans le bilan final
+    // Ajouter les tableaux JSON dans le bilan final
     bilan.put("ACTIFS NON COURANTS", actifsNonCourants);
     bilan.put("ACTIFS COURANTS", actifsCourants);
     bilan.put("CAPITAUX PROPRES", capitauxPropres);
@@ -83,7 +83,62 @@ public class BilanService {
     bilan.put("PASSIFS COURANTS", passifsCourants);
 
     return bilan;
+}*/
+public JSONObject getBilanJSON() {
+    JSONObject bilan = new JSONObject();
+
+    // ACTIFS
+    JSONArray actifs = new JSONArray();
+    actifs.put(new JSONObject().put("nom", "Ecart d'acquisition").put("montant", safeGetValue(() -> 0)));
+    actifs.put(new JSONObject().put("nom", "Immobilisations incorporelles").put("montant", safeGetValue(() -> getImmIncorporelles())));
+    actifs.put(new JSONObject().put("nom", "Immobilisations corporelles").put("montant", safeGetValue(() -> getImmCorporelles())));
+    actifs.put(new JSONObject().put("nom", "Immobilisations en cours").put("montant", safeGetValue(() -> getImmEnCours())));
+    actifs.put(new JSONObject().put("nom", "Immobilisations financières").put("montant", safeGetValue(() -> getImmFinancieres())));
+    actifs.put(new JSONObject().put("nom", "Titres mis en équivalence").put("montant", safeGetValue(() -> getTitresEquivalence())));
+    actifs.put(new JSONObject().put("nom", "Autres participations et créances rattachées").put("montant", safeGetValue(() -> getAutresParticipations())));
+    actifs.put(new JSONObject().put("nom", "Autres titres immobilisés").put("montant", safeGetValue(() -> getAutresTitresImmobilises())));
+    actifs.put(new JSONObject().put("nom", "Prêts et autres immobilisations financières").put("montant", safeGetValue(() -> getPretsImmobilisations())));
+    actifs.put(new JSONObject().put("nom", "Stocks et en cours").put("montant", safeGetValue(() -> getStocksEtEnCours())));
+    actifs.put(new JSONObject().put("nom", "Créances et emplois assimilés").put("montant", safeGetValue(() -> getCreancesEtEmplois())));
+    actifs.put(new JSONObject().put("nom", "Clients et autres débiteurs").put("montant", safeGetValue(() -> getClientsEtAutresDebiteurs())));
+    actifs.put(new JSONObject().put("nom", "Impôts").put("montant", safeGetValue(() -> getImpots())));
+    actifs.put(new JSONObject().put("nom", "Autres créances et actifs assimilés").put("montant", safeGetValue(() -> getAutresCreances())));
+    actifs.put(new JSONObject().put("nom", "Trésorerie et équivalents de trésorerie").put("montant", safeGetValue(() -> getTresorerieEtEquivalents())));
+    actifs.put(new JSONObject().put("nom", "Placements et autres équivalents de trésorerie").put("montant", safeGetValue(() -> getPlacementsEquivalents())));
+    actifs.put(new JSONObject().put("nom", "Trésorerie (fonds en caisse et dépôts à vue)").put("montant", safeGetValue(() -> getTresorerieCaisseDepots())));
+    actifs.put(new JSONObject().put("nom", "TOTAL ACTIFS NON COURANTS").put("montant", safeGetValue(() -> getActifsNonCourants())));
+    actifs.put(new JSONObject().put("nom", "TOTAL ACTIFS COURANTS").put("montant", safeGetValue(() -> getTotalActifsCourants())));
+
+    // PASSIFS
+    JSONArray passifs = new JSONArray();
+    passifs.put(new JSONObject().put("nom", "Produits différés : subventions d'investissement").put("montant", safeGetValue(() -> getSubventionsInvestissement())));
+    passifs.put(new JSONObject().put("nom", "Impôts différés").put("montant", safeGetValue(() -> getImpotsDifferes())));
+    passifs.put(new JSONObject().put("nom", "Emprunts et dettes financières").put("montant", safeGetValue(() -> getEmpruntsDettesFinancieres())));
+    passifs.put(new JSONObject().put("nom", "Provisions et produits constatés d'avance").put("montant", safeGetValue(() -> getProvisionsProduits())));
+    passifs.put(new JSONObject().put("nom", "Dettes à court terme - partie à court terme de dettes à long terme").put("montant", safeGetValue(() -> getDettesCourtTerme())));
+    passifs.put(new JSONObject().put("nom", "Fournisseurs et comptes rattachés").put("montant", safeGetValue(() -> getFournisseursEtComptes())));
+    passifs.put(new JSONObject().put("nom", "Provisions et produits constatés d'avance - passifs courants").put("montant", safeGetValue(() -> getProvisionsProduitsCourants())));
+    passifs.put(new JSONObject().put("nom", "Autres dettes").put("montant", safeGetValue(() -> getAutresDettes())));
+    passifs.put(new JSONObject().put("nom", "Comptes de trésorerie (découverts bancaires)").put("montant", safeGetValue(() -> getComptesTresorerie())));
+    passifs.put(new JSONObject().put("nom", "TOTAL PASSIFS NON COURANTS II").put("montant", safeGetValue(() -> getTotalPassifsNonCourants())));
+    passifs.put(new JSONObject().put("nom", "TOTAL PASSIFS COURANTS").put("montant", safeGetValue(() -> getTotalPassifsCourants())));
+
+
+    // Structure finale
+    bilan.put("actifs", actifs);
+    bilan.put("passifs", passifs);
+
+    return bilan;
 }
+
+
+private JSONObject createJsonEntry(String nom, Object montant) {
+    JSONObject entry = new JSONObject();
+    entry.put("nom", nom);
+    entry.put("montant", montant);
+    return entry;
+}
+
 
 // Helper function to safely execute method and return 0 in case of error
 private Double safeGetValue(Supplier<Double> supplier) {
