@@ -16,54 +16,49 @@ public class AnalyseService {
 
     public Double margeNette(){
         String sql = """
-            WITH Revenu AS (
-                SELECT SUM(montant) AS total_revenu
-                FROM transaction_financiere
-                WHERE compte_financier_id IN (
-                    SELECT id FROM compte_financier WHERE type_compte = (
-                        SELECT id FROM type_compte WHERE nom = 'Produits'
-                    )
-                )
-            ),
-            Charges AS (
-                SELECT SUM(montant) AS total_charges
-                FROM transaction_financiere
-                WHERE compte_financier_id IN (
-                    SELECT id FROM compte_financier WHERE type_compte = (
-                        SELECT id FROM type_compte WHERE nom = 'Charges'
-                    )
-                )
-            )
-            SELECT
-                (Revenu.total_revenu - Charges.total_charges) / Revenu.total_revenu AS marge_nette
-            FROM
-                Revenu, Charges
-        """;
-
+    WITH total_produit AS (
+        SELECT SUM(tf.montant) AS valeur
+        FROM transaction_financiere tf
+                 JOIN compte_financier cf ON cf.id = tf.compte_financier_id
+        WHERE cf.type_compte = 4
+    ),
+         total_charge AS (
+             SELECT SUM(tf.montant) AS valeur
+             FROM transaction_financiere tf
+                      JOIN compte_financier cf ON cf.id = tf.compte_financier_id
+             WHERE cf.type_compte = 5
+         )
+    SELECT
+        CASE
+            WHEN total_produit.valeur = 0 OR total_produit.valeur IS NULL THEN NULL
+            ELSE ((total_produit.valeur - total_charge.valeur) / total_produit.valeur) * 100
+            END AS margeNette
+    FROM
+        total_produit, total_charge
+    """;
         return template.queryForObject(sql, Double.class);
     }
 
     public Double retourActif(){
         String sql = """
-            WITH ResultatNet AS (
-                SELECT
-                    (SUM(CASE WHEN tc.nom = 'Produits' THEN tf.montant ELSE 0 END) -
-                     SUM(CASE WHEN tc.nom = 'Charges' THEN tf.montant ELSE 0 END)) AS resultat_net
-                FROM transaction_financiere tf
-                JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                JOIN type_compte tc ON cf.type_compte = tc.id
-            ),
-            TotalActif AS (
-                SELECT SUM(tf.montant) AS total_actif
-                FROM transaction_financiere tf
-                JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                JOIN type_compte tc ON cf.type_compte = tc.id
-                WHERE tc.nom = 'Actif'
-            )
-            SELECT
-                (ResultatNet.resultat_net / TotalActif.total_actif) * 100 AS roa
-            FROM
-                ResultatNet, TotalActif
+        WITH resultatNet AS (
+           SELECT SUM(tf.montant) AS valeur
+           FROM transaction_financiere tf
+           WHERE tf.compte_financier_id = 8
+             AND EXTRACT(YEAR FROM tf.date_transaction) = 2024
+       ),
+       total_actif AS (
+           SELECT SUM(tf2.montant) AS valeur
+           FROM transaction_financiere tf2
+           JOIN public.compte_financier cf ON cf.id = tf2.compte_financier_id
+           WHERE cf.type_compte = 1
+       )
+       SELECT
+           CASE
+               WHEN total_actif.valeur = 0 THEN NULL -- Éviter la division par zéro
+               ELSE resultatNet.valeur / total_actif.valeur
+           END AS ROA
+       FROM resultatNet, total_actif
             """;
 
         return template.queryForObject(sql, Double.class);
@@ -72,51 +67,48 @@ public class AnalyseService {
 
     public Double retourCapitauxPropre(){
         String sql = """
-                WITH ResultatNet AS (
-                    SELECT
-                        (SUM(CASE WHEN tc.nom = 'Produits' THEN tf.montant ELSE 0 END) -
-                         SUM(CASE WHEN tc.nom = 'Charges' THEN tf.montant ELSE 0 END)) AS resultat_net
-                    FROM transaction_financiere tf
-                    JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                    JOIN type_compte tc ON cf.type_compte = tc.id
-                ),
-                CapitauxPropres AS (
-                    SELECT SUM(tf.montant) AS total_capitaux_propres
-                    FROM transaction_financiere tf
-                    JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                    JOIN type_compte tc ON cf.type_compte = tc.id
-                    WHERE tc.nom = 'Capitaux propres'
-                )
-                SELECT
-                    (ResultatNet.resultat_net / CapitauxPropres.total_capitaux_propres) * 100 AS roe
-                FROM
-                    ResultatNet, CapitauxPropres
+        WITH resultatNet AS (
+            SELECT SUM(tf.montant) AS valeur
+            FROM transaction_financiere tf
+            WHERE tf.compte_financier_id = 8
+              AND EXTRACT(YEAR FROM tf.date_transaction) = 2024
+        ),
+        capitauxPropre AS (
+            SELECT SUM(tf.montant) AS valeur
+            FROM transaction_financiere tf
+            JOIN public.compte_financier cf ON cf.id = tf.compte_financier_id
+            WHERE cf.type_compte = 3
+        )
+        SELECT
+            CASE
+                WHEN capitauxPropre.valeur = 0 THEN NULL -- Éviter la division par zéro
+                ELSE (resultatNet.valeur / capitauxPropre.valeur) * 100
+            END AS ROE
+        FROM resultatNet, capitauxPropre;
                 """;
         return template.queryForObject(sql, Double.class);
     }
 
     public Double ratioLiquiditeGeneral() {
         String sql = """
-            WITH ActifCourant AS (
-                SELECT SUM(tf.montant) AS total_actif_courant
-                FROM transaction_financiere tf
-                JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                WHERE cf.parent_id = (
-                    SELECT id FROM compte_financier WHERE nom = 'Actifs courants'
-                )
-            ),
-            PassifCourant AS (
-                SELECT SUM(tf.montant) AS total_passif_courant
-                FROM transaction_financiere tf
-                JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-                WHERE cf.parent_id = (
-                    SELECT id FROM compte_financier WHERE nom = 'Passif courant'
-                )
-            )
-            SELECT
-                (ActifCourant.total_actif_courant / PassifCourant.total_passif_courant) AS ratio_liquidite_generale
-            FROM
-                ActifCourant, PassifCourant
+        WITH actifCourant AS (
+            SELECT SUM(tf.montant) AS valeur
+            FROM transaction_financiere tf
+            JOIN public.compte_financier cf ON cf.id = tf.compte_financier_id
+            WHERE cf.parent_id = 1
+        ),
+        passifCourant AS (
+            SELECT SUM(tf.montant) AS valeur
+            FROM transaction_financiere tf
+            JOIN public.compte_financier cf ON cf.id = tf.compte_financier_id
+            WHERE cf.parent_id = 3
+        )
+        SELECT
+            CASE
+                WHEN passifCourant.valeur = 0 THEN NULL -- Éviter division par zéro
+                ELSE (actifCourant.valeur / passifCourant.valeur)
+            END AS rlg
+        FROM actifCourant, passifCourant;
         """;
 
         return template.queryForObject(sql, Double.class);
@@ -124,30 +116,25 @@ public class AnalyseService {
 
     public Double ratioLiquiditeReduite() {
         String sql = """
-        WITH ActifCourantSansStock AS (
-            SELECT SUM(tf.montant) AS total_actif_courant_sans_stock
+        WITH actifCourant AS (
+            SELECT SUM(tf.montant) AS valeur
             FROM transaction_financiere tf
-            JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-            WHERE cf.parent_id = (
-                SELECT id FROM compte_financier WHERE nom = 'Actifs courants'
-            )
-            AND cf.nom != 'Stock'
+                     JOIN public.compte_financier cf ON cf.id = tf.compte_financier_id
+            WHERE cf.parent_id = 1
+              AND cf.id NOT IN (22, 23, 24, 25, 26, 27, 28, 29) -- Exclusion des IDs liés aux stocks
         ),
-        PassifCourant AS (
-            SELECT SUM(tf.montant) AS total_passif_courant
-            FROM transaction_financiere tf
-            JOIN compte_financier cf ON tf.compte_financier_id = cf.id
-            WHERE cf.parent_id = (
-                SELECT id FROM compte_financier WHERE nom = 'Passif courant'
-            )
-        )
-        SELECT 
-            (CASE 
-                WHEN PassifCourant.total_passif_courant = 0 THEN NULL
-                ELSE (ActifCourantSansStock.total_actif_courant_sans_stock / PassifCourant.total_passif_courant)
-            END) AS ratio_liquidite_reduite
-        FROM 
-            ActifCourantSansStock, PassifCourant
+             passifCourant AS (
+                 SELECT SUM(tf.montant) AS valeur
+                 FROM transaction_financiere tf
+                          JOIN public.compte_financier cf ON cf.id = tf.compte_financier_id
+                 WHERE cf.parent_id = 3
+             )
+        SELECT
+            CASE
+                WHEN passifCourant.valeur = 0 THEN NULL -- Éviter division par zéro
+                ELSE (actifCourant.valeur / passifCourant.valeur) -- Calcul du RLG
+                END AS rlg
+        FROM actifCourant, passifCourant;
     """;
 
         return template.queryForObject(sql, Double.class);
