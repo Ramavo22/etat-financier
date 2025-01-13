@@ -25,7 +25,7 @@ public interface TransactionFinanciereRepo extends JpaRepository<TransactionFina
             """)
     public List<BilanDetails> getBilanDetails();
 
-    @Query("SELECT SUM(t.montant) FROM TransactionFinanciere t " +
+    @Query("SELECT COALESCE(SUM(t.montant), 0) FROM TransactionFinanciere t " +
            "WHERE t.compteFinancier.typeCompte.nom = :category " +
            "AND t.dateTransaction BETWEEN :startDate AND :endDate")
     Double sumByCategoryAndDateRange(@Param("category") String category,

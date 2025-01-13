@@ -9,10 +9,10 @@
       <div v-if="totalActif !== totalPassif" class="error-message">
         <i class="fas fa-warning"></i>
         <span v-if="totalActif > totalPassif">
-          Il manque {{ formatAmount(totalActif - totalPassif) }} du côté du passif pour équilibrer l'actif et le passif.
+          Il manque {{ totalActif - totalPassif }} du côté du passif pour équilibrer l'actif et le passif.
         </span>
         <span v-else>
-          Il manque {{ formatAmount(totalPassif - totalActif) }} du côté de l'actif pour équilibrer l'actif et le
+          Il manque {{ totalPassif - totalActif }} du côté de l'actif pour équilibrer l'actif et le
           passif.
         </span>
       </div>
@@ -30,12 +30,12 @@
           <tbody>
             <tr v-for="(actif, index) in actifs" :key="'actif-' + index">
               <td>{{ actif.nom }}</td>
-              <td>{{ formatAmount(actif.montant) }}</td>
+              <td>{{ actif.montant }}</td>
             </tr>
             <!-- Ligne des Totaux -->
             <tr class="total-row">
               <td><strong>Total Actif</strong></td>
-              <td><strong>{{ formatAmount(totalActif) }}</strong></td>
+              <td><strong>{{ totalActif }}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -51,12 +51,12 @@
           <tbody>
             <tr v-for="(passif, index) in passifs" :key="'passif-' + index">
               <td>{{ passif.nom }}</td>
-              <td>{{ formatAmount(passif.montant) }}</td>
+              <td>{{ (passif.montant) }}</td>
             </tr>
             <!-- Ligne des Totaux -->
             <tr class="total-row">
               <td><strong>Total Passif</strong></td>
-              <td><strong>{{ formatAmount(totalPassif) }}</strong></td>
+              <td><strong>{{ (totalPassif) }}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -91,12 +91,12 @@
           <tbody>
             <tr v-for="(resultat, index) in resultats" :key="'resultat-' + index">
               <td>{{ resultat.nom }}</td>
-              <td>{{ formatAmount(resultat.montant) }}</td>
+              <td>{{ (resultat.montant) }}</td>
             </tr>
             <!-- Ligne des Totaux -->
             <tr class="total-row">
               <td><strong>Total Résultat</strong></td>
-              <td><strong>{{ formatAmount(totalResultat) }}</strong></td>
+              <td><strong>{{ (totalResultat) }}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -214,7 +214,11 @@ export default {
     },
     methods: {
       formatAmount(amount) {
-        return amount.toLocaleString('fr-MG') + ' MGA';
+            if (amount === undefined || amount === null || isNaN(amount)) {
+                return '0 MGA'; // Valeur par défaut
+            }
+            return Number(amount).toLocaleString('fr-MG') + ' MGA'
+
       },
     async fetchBilan() {
         try {
@@ -238,7 +242,7 @@ export default {
             throw new Error('Erreur lors de la récupération des données');
           }
           const data = await response.json();
-          this.resultats = data.resultats;
+          this.resultats = data;
         } catch (error) {
           console.error('Erreur:', error.message);
           alert('Impossible de charger les données pour la période sélectionnée.');

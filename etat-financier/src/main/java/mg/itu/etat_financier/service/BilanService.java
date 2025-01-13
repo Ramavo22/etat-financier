@@ -338,7 +338,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     // Subventions d'investissement
     public Double getSubventionsInvestissement() {
         String sql = """
-            SELECT SUM(t.montant) AS total_subventions_investissement
+            SELECT COALESCE(SUM(t.montant) AS total_subventions_investissement
             FROM transaction_financiere t
             JOIN compte_financier c ON t.compte_financier_id = c.id
             WHERE c.nom = 'Subventions d''investissement';
