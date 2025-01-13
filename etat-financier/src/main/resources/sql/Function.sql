@@ -173,13 +173,13 @@ $$
 BEGIN
     RETURN QUERY
     WITH RECURSIVE enfants AS (
-        SELECT c.id, c.nom, c.type_compte, c.parent_id
+        SELECT c.id::INT, c.nom, c.type_compte::INT, c.parent_id::INT
         FROM compte_financier c
         WHERE c.nom = nom_rubrique
         
         UNION ALL
         
-        SELECT c.id, c.nom, c.type_compte, c.parent_id
+        SELECT c.id::INT, c.nom, c.type_compte::INT, c.parent_id::INT
         FROM compte_financier c
         INNER JOIN enfants e ON c.parent_id = e.id
     )
