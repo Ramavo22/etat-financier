@@ -20,7 +20,7 @@ public class FinancialData {
 
     // Fonction utilitaire pour obtenir la somme avec un filtre de date
     private double getSumByCategoryAndDateRange(String category, LocalDate startDate, LocalDate endDate) {
-        return getSumByCategoryAndDateRange(category, startDate, endDate);
+        return transactionService.getSumByCategoryAndDateRange(category, startDate, endDate);
     }
 
     // Chiffre d'affaires

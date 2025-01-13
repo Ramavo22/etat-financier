@@ -218,7 +218,7 @@ export default {
       },
     async fetchBilan() {
         try {
-          const response = await fetch('localhost:9090/api/bilan');
+          const response = await fetch('http://localhost:9090/api/bilan');
           if (!response.ok) {
             throw new Error('Erreur lors de la récupération des données');
           }
@@ -232,7 +232,7 @@ export default {
       },
     async fetchResultats() {
         try {
-          const url = `localhost:9090/api/resultats?startDate=${this.startDate}&endDate=${this.endDate}`;
+          const url = `http://localhost:9090/api/financial/data?startDate=${this.startDate}&endDate=${this.endDate}`;
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error('Erreur lors de la récupération des données');

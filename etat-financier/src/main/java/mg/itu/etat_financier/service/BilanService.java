@@ -164,7 +164,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getImmIncorporelles() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Immobilisations incorporelles') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -175,7 +175,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getImmCorporelles() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Immobilisations corporelles') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -186,7 +186,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getImmEnCours() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Immobilisations en cours') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -197,7 +197,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getImmFinancieres() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Autres immobilisations financières') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -208,7 +208,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getActifsNonCourants() {
         String sql = """
             SELECT SUM(t.montant) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Actifs Non courant') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -219,7 +219,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getStocksEtEnCours() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Stock') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -230,7 +230,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getCreancesEtEmplois() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Creances clients') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -241,7 +241,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getTresorerieEtEquivalents() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Tresorerie') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -252,7 +252,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getTotalActifsCourants() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Actifs courants') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -264,7 +264,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getCapitalEmis() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Capital, réserves et assimilés') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -275,11 +275,11 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getPrimesEtReserves() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme_primes_et_reserves
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Report à nouveau') e ON t.compte_financier_id = e.id
             UNION ALL
             SELECT COALESCE(SUM(t.montant), 0)
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Résultat de l''exercice') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -289,7 +289,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getEcartsEvaluation() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme_ecarts_evaluation
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Ecarts d\'évaluation') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -299,7 +299,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getEcartsEquivalence() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS somme_ecart_equivalence
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Ecart d\'équivalence') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -309,7 +309,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getResultatNetPartDuGroupe() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS resultat_net_part_du_groupe
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Résultat de l''exercice') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -319,7 +319,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getAutresCapitauxPropres() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS resultat_net_part_du_groupe
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Report à nouveau') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -329,7 +329,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getTotalCapitauxPropres() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS resultat_net_part_du_groupe
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('capitaux propres') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -339,7 +339,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getSubventionsInvestissement() {
         String sql = """
             SELECT SUM(t.montant) AS total_subventions_investissement
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN compte_financier c ON t.compte_financier_id = c.id
             WHERE c.nom = 'Subventions d''investissement';
         """;
@@ -350,7 +350,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getEmpruntsDettesFinancieres() {
         String sql = """
             SELECT COALESCE(SUM(t.montant), 0) AS resultat_net_part_du_groupe
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Emprunts et dettes assimilés') e ON t.compte_financier_id = e.id;
         """;
         return jdbcTemplate.queryForObject(sql, Double.class);
@@ -360,7 +360,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getProvisionsProduits() {
         String sql = """
             SELECT SUM(t.montant) AS total_provisions_prod_concustes
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Provisions et produits constatés d\'avance') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -371,7 +371,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getTotalPassifsNonCourants() {
         String sql = """
             SELECT SUM(t.montant) AS total_provisions_prod_concustes
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Passif Non courant') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -382,7 +382,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getDettesCourtTerme() {
         String sql = """
             SELECT SUM(t.montant) AS total_dettes_court_terme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Dettes à court terme') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -393,7 +393,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getFournisseursEtComptes() {
         String sql = """
             SELECT SUM(t.montant) AS total_dettes_court_terme
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Fournisseurs et comptes rattachés') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -404,7 +404,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getProvisionsProduitsCourants() {
         String sql = """
             SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Provisions et produits constatés d''avance - passifs courants') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -415,7 +415,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getComptesTresorerie() {
         String sql = """
             SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Tresorerie') e
                 ON t.compte_financier_id = e.id;
         """;
@@ -426,7 +426,7 @@ private Double safeGetValue(Supplier<Double> supplier) {
     public Double getTotalPassifsCourants() {
         String sql = """
             SELECT SUM(t.montant) AS total_provisions_produits_constates_avance
-            FROM TransactionFinanciere t
+            FROM transaction_financiere t
             JOIN get_enfants_recursive('Passif courant') e
                 ON t.compte_financier_id = e.id;
         """;

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/financial")
+@CrossOrigin(origins = "http://localhost:5173")
 public class FinancialController {
 
     private final FinancialData financialData;
